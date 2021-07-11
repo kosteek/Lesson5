@@ -1,0 +1,10 @@
+---
+- name: Deploy my app
+  hosts: all
+  become: true
+
+  roles:
+  - deploy_docker
+  - deploy_docker_compose
+  - git_clone_repo
+  - deploy_app

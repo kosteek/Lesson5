@@ -1,0 +1,49 @@
+---
+# tasks file for deploy_docker
+
+- name: Install aptitude using apt
+  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'gnupg', 'lsb-release', 'git', 'python3-pip', 'virtualenv', 'python3-setuptools' ]
+  
+- name: Uninstall python2
+  apt: name=python state=absent update_cache=yes 
+
+- name: Apt autoremove
+  apt:
+    autoremove: yes
+  
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: forcereinstall
+    executable: pip3
+  run_once: True
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'docker-ce' ]
+  
+- name: Install Docker Module for Python
+  pip:
+    name: docker
+    executable: pip3
+    
+- name: Add remote {{ ansible_user_id }} user to "docker" group
+  remote_user: "{{ ansible_env.USER }}"
+  user:
+    name: "{{ ansible_env.USER }}"
+    group: "docker"
+    append: yes

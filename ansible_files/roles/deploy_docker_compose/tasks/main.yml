@@ -1,0 +1,24 @@
+---
+# tasks file for deploy_docker_compose
+
+#- name: Download docker-compose
+#  get_url:
+#    url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
+#    dest: /usr/local/bin/docker-compose
+#    mode: 'u+x,g+x'
+      
+#- name: Create symbol link
+#  file:
+#    src: /usr/local/bin/docker-compose
+#    dest: /usr/bin/docker-compose
+#    state: link
+
+- name: Pip install setuptools-rust
+  pip:
+    name:
+    - setuptools-rust
+
+- name: Pip install docker-compose
+  pip:
+    name:
+    - docker-compose

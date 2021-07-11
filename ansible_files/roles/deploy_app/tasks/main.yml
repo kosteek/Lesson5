@@ -1,0 +1,7 @@
+---
+# tasks file for deploy_app
+
+- name: Deploy my app from docker-compose.yml
+  docker_compose:
+    project_src: "{{ project_path }}"
+    files: docker-compose.yml
